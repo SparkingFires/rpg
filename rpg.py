@@ -368,6 +368,7 @@ def ComplexHelp():
             print("'hp: displays your current HP")
             print("'maxhp': displays your max HP")
             print("'xp': displays your max HP")
+            print("'stats': displays all your stats")
             
         
 def Credits():
