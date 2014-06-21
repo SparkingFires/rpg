@@ -1,12 +1,12 @@
 Hello!
 
 Most of the game is explained in game, but one common mistake is that when you battle, eat or drink, you don't do:
->>battle goblin
-
+battle goblin
+ 
 You must do
->>battle
+battle 
 (hit enter)
-    >>goblin
+    goblin
     (hit enter)
     
 (fight happens)
