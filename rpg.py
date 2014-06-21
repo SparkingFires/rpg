@@ -21,8 +21,9 @@ time.sleep(.3)
 print '\_| \_\_|    \____/  '
 time.sleep(.3)
 
-version = 1.0
+version = 1.1
 print 'Version ' + str(version)
+print
 
 class Player:
     
@@ -73,10 +74,10 @@ class Player:
         print('Level      : ' + str(self.level))
         print('XP         : ' + str(self.xp))
         print('Next Level : ' + str(100 * self.level * (self.level)))
-        print()
+        print
         print('Attack     : ' + str(self.attack))
         print('Defense    : ' + str(self.defense))
-        print()
+        print
         print('Max HP     : ' + str(self.maxhp))
         print('Curent HP  : ' + str(self.hp))
     
@@ -86,7 +87,7 @@ class Player:
         if name in Enemies.stats:
             enemy = Enemies(name[0].upper() + name[1:], Enemies.stats[name][1], Enemies.stats[name][2], Enemies.stats[name][3], Enemies.drops[name])
             print (enemy.name) + ':' + str(enemy.hp) 
-            print()
+            print
             while enemy.hp>0 and self.hp>0:
                 
                 randomatt = random.randint(1, 6) + (enemy.attack)
@@ -134,16 +135,19 @@ class Player:
         fooditem = raw_input('    >>')
         foodlist = Food()
         if fooditem in foodlist.food and fooditem in self.items:
-            prevhp = self.hp
-            foodhp = (foodlist.food[fooditem])
-            self.hp = self.hp + foodhp
-            self.items[fooditem] = self.items[fooditem] - 1
-            if self.hp > self.maxhp:
-                self.hp = self.maxhp
-                print 'You have max HP now'
-            else:
-                print 'You ate ' + str(fooditem) + ' and healed ' + str(foodhp) + ' HP'
-            print 'Your health is now ' + str(self.hp)
+            if self.items[fooditem] == 0:
+                print "You don't have anymore " + str(fooditem)
+            if self.items[fooditem] > 0:
+                prevhp = self.hp
+                foodhp = (foodlist.food[fooditem])
+                self.hp = self.hp + foodhp
+                self.items[fooditem] = self.items[fooditem] - 1
+                if self.hp > self.maxhp:
+                    self.hp = self.maxhp
+                    print 'You have max HP now'
+                else:
+                    print 'You ate ' + str(fooditem) + ' and healed ' + str(foodhp) + ' HP'
+                    print 'Your health is now ' + str(self.hp)
         else:
             print 'You can\'t eat that'
                 
@@ -170,11 +174,11 @@ class Enemies():
 
     stats = {} # lvl A D HP
     stats['goblin'] = [1, 1, 1, 15]
-    stats['spider'] = [7, 5, 8, 40]
     stats['hobgoblin'] = [2, 2, 2, 17]
     stats['imp'] = [4,3,1,21]
-    stats['lizardfolk'] = [4, 5, 3, 25]
+    stats['lizardfolk'] = [5, 5, 3, 25]
     stats['kobold'] = [6, 6, 7, 35]
+    stats['spider'] = [7, 5, 8, 40]
     stats['gargoyle'] = [11, 16, 15, 51]
     stats['skeleton'] = [12, 9, 14, 67]
     stats['troll'] = [14, 14, 16, 70]
@@ -194,11 +198,11 @@ class Enemies():
     stats['phoenix'] = [100, 100, 100, 1000]
     drops = {} # % chance, how many, out of how many
     drops['goblin'] = [['gold', 100, 1, 15],['fish', 40, 1, 1]]
-    drops['spider'] = [['gold', 10, 5, 10],['healthpotion', 50, 1, 2]]
-    drops['hobgoblin'] = [['gold',100, 1, 12],['meat',50,1,2]]
+    drops['hobgoblin'] = [['gold',100, 1, 12],['meat',50, 1, 2]]
     drops['imp'] = [['gold',100, 1,10],['bread',50,1,1],['healthpotion',25,1,1],['meat',60,1,3]]
     drops['lizardfolk'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
     drops['kobold'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
+    drops['spider'] = [['gold', 10, 5, 10],['healthpotion', 50, 1, 2]]
     drops['gargoyle'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
     drops['skeleton'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
     drops['troll'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
@@ -312,7 +316,7 @@ class Menu():
         
 def DisplayEnemies():
     print('Level   Name')
-    print()
+    print
     enemylist = []
     for i in Enemies.stats:
         enemylevel = Enemies.stats[i][0]
