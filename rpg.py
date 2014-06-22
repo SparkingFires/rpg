@@ -1,6 +1,6 @@
 # TO DO
 #
-# Add Custom Drops
+# Make Tutorial
 # Add Shop
 # Create Campagin
 
@@ -22,7 +22,7 @@ time.sleep(.3)
 print '\_| \_\_|    \____/  '
 time.sleep(.3)
 
-version = 1.2
+version = 1.22
 print 'Version ' + str(version)
 print
 
@@ -191,7 +191,8 @@ class Enemies():
     stats['hobgoblin'] = [2, 2, 2, 17]
     stats['imp'] = [4,4,1,21]
     stats['lizardfolk'] = [5, 5, 3, 25]
-    stats['kobold'] = [7, 6, 7, 35]
+    stats['harpy'] = [6, 5, 6, 32]
+    stats['kobold'] = [8, 5, 7, 37]
     stats['spider'] = [9, 6, 9, 40]
     stats['gargoyle'] = [11, 16, 15, 51]
     stats['skeleton'] = [12, 9, 14, 67]
@@ -212,29 +213,29 @@ class Enemies():
     stats['phoenix'] = [100, 100, 100, 1000]
     drops = {} # % chance, how many, out of how many
     drops['goblin'] = [['gold', 100, 1, 10],['fish', 40, 1, 1]]
-    drops['hobgoblin'] = [['gold', 100, 1, 10],['meat', 50, 1, 1]]
-    drops['imp'] = [['gold', 100, 1, 10],['bread', 50, 1, 1],['healthpotion', 25, 1, 1]]
-    drops['lizardfolk'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
-    drops['kobold'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
-    drops['spider'] = [['gold', 10, 5, 10],['healthpotion', 50, 1, 2]]
-    drops['gargoyle'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
-    drops['skeleton'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
-    drops['troll'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
-    drops['vampire'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
-    drops['orc'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
-    drops['giant'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
-    drops['orge'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
-    drops['golem'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
-    drops['basilisk'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
-    drops['manticore'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
-    drops['minotaur'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
-    drops['wizard'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
-    drops['elemental'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
-    drops['dragon'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
-    drops['serpent'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
-    drops['wyvern'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
-    drops['hydra'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
-    drops['phoenix'] = [['firerod', 100, 1, 1], ['you win', 100, 1, 1]]
+    drops['hobgoblin'] = [['gold', 100, 1, 12],['meat', 50, 1, 1]]
+    drops['imp'] = [['gold', 100, 1, 14],['bread', 50, 1, 1],['healthpotion', 25, 1, 1]]
+    drops['lizardfolk'] = [['gold', 100, 1, 15],['fish', 50, 1, 2],['bread', 50, 1, 2]]
+    drops['kobold'] = [['gold', 100, 1, 17],['meat', 50, 1, 2],['healthpotion', 25, 1, 1]]
+    drops['spider'] = [['gold', 100, 1, 20],['healthpotion', 75, 1, 2]]
+    drops['gargoyle'] = [['gold', 100, 10, 26]]
+    drops['skeleton'] = [['gold', 100, 7, 28]]
+    drops['troll'] = [['gold', 100, 5, 26],['meat', 100, 1, 4]]
+    drops['vampire'] = [['gold', 100, 7, 29],['bread', 100, 1, 4]]
+    drops['orc'] = [['gold', 100, 9, 31], ['meat', 100, 1, 3]]
+    drops['giant'] = [['gold', 100, 12, 34], ['meat', 100, 1, 4]]
+    drops['orge'] = [['gold', 100, 15, 35], ['meat', 100, 1, 4]]
+    drops['golem'] = [['gold', 100, 18, 37]]
+    drops['basilisk'] = [['gold', 100, 20, 40], ['meat', 100, 2, 6]]
+    drops['manticore'] = [['gold', 100, 20, 44], ['meat', 100, 3, 8]]
+    drops['minotaur'] = [['gold', 100, 20, 50], ['meat', 100, 4, 11]]
+    drops['wizard'] = [['gold', 100, 25, 60], ['bread', 100, 5, 11]]
+    drops['elemental'] = [['gold', 100, , 10]]
+    drops['dragon'] = [['gold', 100, 1, 10], ['meat', 100, 7, 17]]
+    drops['serpent'] = [['gold', 100, 1, 10], ['meat', 100, 10, 20]]
+    drops['wyvern'] = [['gold', 100, 1, 10], ['meat', 100, 14, 20]]
+    drops['hydra'] = [['gold', 100, 1, 10], ['meat', 100, 20, 32]]
+    drops['phoenix'] = [['gold', 100, 900, 1000]]
     
     def __init__(self,name,attack,defense,hp,drops):
         self.name = name
