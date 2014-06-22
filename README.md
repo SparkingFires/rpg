@@ -8,7 +8,7 @@ You must do
 
     >>battle 
     (hit enter)
-    >>goblin
+        >>goblin
     (hit enter)
     
 (fight happens)
