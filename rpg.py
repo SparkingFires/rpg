@@ -22,7 +22,7 @@ time.sleep(.3)
 print '\_| \_\_|    \____/  '
 time.sleep(.3)
 
-version = 1.22
+version = '1.2.3'
 print 'Version ' + str(version)
 print
 
@@ -227,15 +227,15 @@ class Enemies():
     drops['orge'] = [['gold', 100, 15, 35], ['meat', 100, 1, 4]]
     drops['golem'] = [['gold', 100, 18, 37]]
     drops['basilisk'] = [['gold', 100, 20, 40], ['meat', 100, 2, 6]]
-    drops['manticore'] = [['gold', 100, 20, 44], ['meat', 100, 3, 8]]
-    drops['minotaur'] = [['gold', 100, 20, 50], ['meat', 100, 4, 11]]
-    drops['wizard'] = [['gold', 100, 25, 60], ['bread', 100, 5, 11]]
-    drops['elemental'] = [['gold', 100, , 10]]
-    drops['dragon'] = [['gold', 100, 1, 10], ['meat', 100, 7, 17]]
-    drops['serpent'] = [['gold', 100, 1, 10], ['meat', 100, 10, 20]]
-    drops['wyvern'] = [['gold', 100, 1, 10], ['meat', 100, 14, 20]]
-    drops['hydra'] = [['gold', 100, 1, 10], ['meat', 100, 20, 32]]
-    drops['phoenix'] = [['gold', 100, 900, 1000]]
+    drops['manticore'] = [['gold', 100, 25, 44], ['meat', 100, 3, 8]]
+    drops['minotaur'] = [['gold', 100, 30, 50], ['meat', 100, 4, 11]]
+    drops['wizard'] = [['gold', 100, 40, 60], ['bread', 100, 5, 11]]
+    drops['elemental'] = [['gold', 100, 50, 80]]
+    drops['dragon'] = [['gold', 100, 60, 90], ['meat', 100, 7, 17]]
+    drops['serpent'] = [['gold', 100, 70, 100], ['meat', 100, 10, 20]]
+    drops['wyvern'] = [['gold', 100, 80, 120], ['meat', 100, 14, 20]]
+    drops['hydra'] = [['gold', 100, 90, 150], ['meat', 100, 20, 32]]
+    drops['phoenix'] = [['gold', 100, 200, 300]]
     
     def __init__(self,name,attack,defense,hp,drops):
         self.name = name
