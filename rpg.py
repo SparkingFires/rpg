@@ -1,5 +1,6 @@
 # TO DO
 #
+# Eat Until Full
 # Make Tutorial
 # Add Shop
 # Create Campagin
@@ -22,13 +23,11 @@ time.sleep(.3)
 print '\_| \_\_|    \____/  '
 time.sleep(.3)
 
-version = '1.2.3'
+version = '1.2.5'
 print 'Version ' + str(version)
 print
 
-
 class Player:
-    
     def __init__(self):
         self.SaveFileName = raw_input("Enter User Name\n>> ")
         items = {}
@@ -134,6 +133,9 @@ class Player:
                 self.defense = self.defense + 1
                 print ("You have leveled up!")
                 print ("You are now level {0}").format(self.level)
+                if self.hp >= self.maxhp:
+                    print "You have max HP"
+                    print "You can't drink anymore"
                 
     def Eat(self):
         fooditem = raw_input('    >>')
@@ -189,22 +191,22 @@ class Enemies():
     stats = {} # lvl A D HP
     stats['goblin'] = [1, 1, 1, 15]
     stats['hobgoblin'] = [2, 2, 2, 17]
-    stats['imp'] = [4,4,1,21]
+    stats['imp'] = [4, 4, 1, 21]
     stats['lizardfolk'] = [5, 5, 3, 25]
-    stats['harpy'] = [6, 5, 6, 32]
+    stats['harpy'] = [7, 7, 6, 32]
     stats['kobold'] = [8, 5, 7, 37]
-    stats['spider'] = [9, 6, 9, 40]
-    stats['gargoyle'] = [11, 16, 15, 51]
-    stats['skeleton'] = [12, 9, 14, 67]
-    stats['troll'] = [14, 14, 16, 70]
-    stats['vampire'] = [16, 20, 12, 60]
-    stats['orc'] = [19, 21, 16, 75]
-    stats['orge'] = [25, 25, 27, 97]
+    stats['spider'] = [9, 6, 9, 42]
+    stats['troll'] = [11, 9, 12, 46]
+    stats['skeleton'] = [14, 12, 14, 50]
+    stats['orc'] = [16, 17, 15, 57]
+    stats['giant'] = [19, 17, 20, 63]
+    stats['gargoyle'] = [22, 22, 22, 75]
+    stats['orge'] = [25, 25, 27, 84]
     stats['golem'] = [30, 23, 38, 90]
-    stats['basilisk'] = [34, 35, 37, 82]
-    stats['manticore'] = [47, 50, 45, 110]
-    stats['minotaur'] = [55, 56, 55, 130]
-    stats['wizard'] = [61, 65, 68, 150]
+    stats['basilisk'] = [36, 35, 37, 97]
+    stats['manticore'] = [48, 50, 45, 110]
+    stats['minotaur'] = [56, 56, 55, 130]
+    stats['wizard'] = [62, 65, 68, 150]
     stats['elemental'] = [67, 70, 75, 200]
     stats['dragon'] = [72, 77, 77, 400]
     stats['serpent'] = [84, 88, 85, 550]
@@ -213,29 +215,29 @@ class Enemies():
     stats['phoenix'] = [100, 100, 100, 1000]
     drops = {} # % chance, how many, out of how many
     drops['goblin'] = [['gold', 100, 1, 10],['fish', 40, 1, 1]]
-    drops['hobgoblin'] = [['gold', 100, 1, 12],['meat', 50, 1, 1]]
+    drops['hobgoblin'] = [['gold', 100, 1, 12],['meat', 75, 1, 1]]
     drops['imp'] = [['gold', 100, 1, 14],['bread', 50, 1, 1],['healthpotion', 25, 1, 1]]
     drops['lizardfolk'] = [['gold', 100, 1, 15],['fish', 50, 1, 2],['bread', 50, 1, 2]]
-    drops['kobold'] = [['gold', 100, 1, 17],['meat', 50, 1, 2],['healthpotion', 25, 1, 1]]
-    drops['spider'] = [['gold', 100, 1, 20],['healthpotion', 75, 1, 2]]
-    drops['gargoyle'] = [['gold', 100, 10, 26]]
-    drops['skeleton'] = [['gold', 100, 7, 28]]
+    drops['harpy'] = [['gold', 100, 1, 18],['bread', 75, 1, 2], ]
+    drops['kobold'] = [['gold', 100, 1, 21],['meat', 50, 1, 2],['healthpotion', 25, 1, 1]]
+    drops['spider'] = [['gold', 100, 1, 24],['healthpotion', 75, 1, 2]]
     drops['troll'] = [['gold', 100, 5, 26],['meat', 100, 1, 4]]
-    drops['vampire'] = [['gold', 100, 7, 29],['bread', 100, 1, 4]]
+    drops['skeleton'] = [['gold', 100, 7, 28],['healthpotion', 50, 1, 2]]
     drops['orc'] = [['gold', 100, 9, 31], ['meat', 100, 1, 3]]
     drops['giant'] = [['gold', 100, 12, 34], ['meat', 100, 1, 4]]
+    drops['gargoyle'] = [['gold', 100, 10, 26],['healthpotion', 25, 1, 2]]
     drops['orge'] = [['gold', 100, 15, 35], ['meat', 100, 1, 4]]
-    drops['golem'] = [['gold', 100, 18, 37]]
+    drops['golem'] = [['gold', 100, 18, 37],['healthpotion', 50, 1, 3]]
     drops['basilisk'] = [['gold', 100, 20, 40], ['meat', 100, 2, 6]]
     drops['manticore'] = [['gold', 100, 25, 44], ['meat', 100, 3, 8]]
     drops['minotaur'] = [['gold', 100, 30, 50], ['meat', 100, 4, 11]]
     drops['wizard'] = [['gold', 100, 40, 60], ['bread', 100, 5, 11]]
-    drops['elemental'] = [['gold', 100, 50, 80]]
+    drops['elemental'] = [['gold', 100, 50, 80],['healthpotion', 75, 3, 7]]
     drops['dragon'] = [['gold', 100, 60, 90], ['meat', 100, 7, 17]]
     drops['serpent'] = [['gold', 100, 70, 100], ['meat', 100, 10, 20]]
     drops['wyvern'] = [['gold', 100, 80, 120], ['meat', 100, 14, 20]]
     drops['hydra'] = [['gold', 100, 90, 150], ['meat', 100, 20, 32]]
-    drops['phoenix'] = [['gold', 100, 200, 300]]
+    drops['phoenix'] = [['gold', 100, 200, 300],['healthpotion', 100, 3, 10]]
     
     def __init__(self,name,attack,defense,hp,drops):
         self.name = name
@@ -275,6 +277,7 @@ class Menu():
     def RunMenu(self, player):
         choice = ''
         while not choice == 'exit':
+            levelup = str(100 * player.level * (player.level))
             choice = raw_input('>>')
             choice = choice.lower()
             if choice == 'save':
@@ -296,16 +299,22 @@ class Menu():
                 DisplayEnemies()
             if choice == 'hp':
                 print ('Your current HP is ' + str(player.hp))
-            if choice == 'maxhp':
                 print ('Your max HP is ' + str(player.maxhp))
             if choice == 'att':
                 print ('Your attack is ' + str(player.attack))
             if choice == 'def':
                 print ('Your defense is ' + str(player.defense))
-            if choice == 'xp':
-                print ('You have ' + str(player.xp) + ' XP')
-            if choice == 'lvl':
+            if choice == 'lvl' or choice == 'level':
                 print ('You are level ' + str(player.level))
+            if choice == 'xp' or choice == 'xp':
+                print 'You have ' + str(player.xp) + ' XP'
+                time.sleep(.3)
+                print 'You need ' + levelup + ' XP to level up'
+                time.sleep(.3)
+                print 'You need ' + str(int(levelup) - int(player.xp)) + ' more XP'
+                time.sleep(.3)
+            if choice == 'version':
+                print 'This Game is Version ' + str(version)
             if choice in player.items:
                 print(choice + '(' + str(player.items[choice]) + ')')
                 
@@ -403,6 +412,5 @@ def RunGame():
     menu.RunMenu(player)
     
 RunGame()
-                
-        
-        
+
+
