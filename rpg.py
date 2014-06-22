@@ -1,5 +1,6 @@
 # TO DO
 #
+# Add Custom Drops
 # Add Shop
 # Create Campagin
 
@@ -29,7 +30,7 @@ print
 class Player:
     
     def __init__(self):
-        self.SaveFileName = raw_input("Enter File Name\n>> ")
+        self.SaveFileName = raw_input("Enter User Name\n>> ")
         items = {}
         
     def Load(self):
@@ -152,16 +153,17 @@ class Player:
                 else:
                     print 'You ate ' + str(fooditem) + ' and healed ' + str(foodhp) + ' HP'
                     print 'Your health is now ' + str(self.hp)
-        else:
-            print 'You can\'t eat that'
+        if fooditem in self.items and fooditem not in foodlist.food:
+            print "You can't eat that"
+                    
                 
     def Drink(self):
         drinkitem = raw_input('    >>')
         drinkitem = drinkitem.lower()
         drinkitem = drinkitem.replace(" ", "")
         potionlist = Potion()
-        drinkhp = (potionlist.potion[drinkitem])
         if drinkitem in potionlist.potion and drinkitem in self.items:
+            drinkhp = (potionlist.potion[drinkitem])
             if self.items[drinkitem] == 0:
                 print "You don't have anymore " + str(drinkitem)
             if self.hp >= self.maxhp:
@@ -178,8 +180,8 @@ class Player:
                 else:
                     print 'You drank a ' + str(drinkitem) + ' and healed ' + str(drinkhp) + ' HP'
                     print 'Your health is now ' + str(self.hp)
-        else:
-            print 'You can\'t eat that'
+        if drinkitem in self.items and drinkitem not in potionlist.potion:
+            print "You can't drink that"
 
 
 class Enemies():
@@ -209,9 +211,9 @@ class Enemies():
     stats['hydra'] = [93, 94, 93, 750]
     stats['phoenix'] = [100, 100, 100, 1000]
     drops = {} # % chance, how many, out of how many
-    drops['goblin'] = [['gold', 100, 1, 15],['fish', 40, 1, 1]]
-    drops['hobgoblin'] = [['gold',100, 1, 12],['meat',50, 1, 2]]
-    drops['imp'] = [['gold',100, 1,10],['bread',50,1,1],['healthpotion',25,1,1],['meat',60,1,3]]
+    drops['goblin'] = [['gold', 100, 1, 10],['fish', 40, 1, 1]]
+    drops['hobgoblin'] = [['gold', 100, 1, 10],['meat', 50, 1, 1]]
+    drops['imp'] = [['gold', 100, 1, 10],['bread', 50, 1, 1],['healthpotion', 25, 1, 1]]
     drops['lizardfolk'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
     drops['kobold'] = [['gold', 100, 1, 10], ['meat', 50, 1, 2]]
     drops['spider'] = [['gold', 10, 5, 10],['healthpotion', 50, 1, 2]]
@@ -257,9 +259,9 @@ class Food():
     
     def __init__(self):
         self.food = {}
+        self.food['bread'] = 2
         self.food['fish'] = 3
         self.food['meat'] = 5
-        self.food['bread'] = 2
         
 class Potion():
     
@@ -269,12 +271,11 @@ class Potion():
 
         
 class Menu():
-    
     def RunMenu(self, player):
         choice = ''
-        print choice
         while not choice == 'exit':
             choice = raw_input('>>')
+            choice = choice.lower()
             if choice == 'save':
                 player.Save()
             if choice == 'help':
