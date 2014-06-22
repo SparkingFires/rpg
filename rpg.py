@@ -21,9 +21,10 @@ time.sleep(.3)
 print '\_| \_\_|    \____/  '
 time.sleep(.3)
 
-version = 1.1
+version = 1.2
 print 'Version ' + str(version)
 print
+
 
 class Player:
     
@@ -80,9 +81,11 @@ class Player:
         print
         print('Max HP     : ' + str(self.maxhp))
         print('Curent HP  : ' + str(self.hp))
+        
     
     def Battle(self):
         name = raw_input('    >>')
+        name = name.replace(" ", "")
         xpgain = 0
         if name in Enemies.stats:
             enemy = Enemies(name[0].upper() + name[1:], Enemies.stats[name][1], Enemies.stats[name][2], Enemies.stats[name][3], Enemies.drops[name])
@@ -106,7 +109,7 @@ class Player:
                 time.sleep(0.3)
                 print('Player:' + str(max(0,self.hp)))
                 print(enemy.name.title() + ':' + str(max(0,enemy.hp)))
-                print ()
+                print
             if self.hp<=0:
                 print 'You lost'
                 self.hp = self.maxhp
@@ -133,6 +136,7 @@ class Player:
                 
     def Eat(self):
         fooditem = raw_input('    >>')
+        fooditem = fooditem.lower()
         foodlist = Food()
         if fooditem in foodlist.food and fooditem in self.items:
             if self.items[fooditem] == 0:
@@ -153,32 +157,40 @@ class Player:
                 
     def Drink(self):
         drinkitem = raw_input('    >>')
+        drinkitem = drinkitem.lower()
+        drinkitem = drinkitem.replace(" ", "")
         potionlist = Potion()
+        drinkhp = (potionlist.potion[drinkitem])
         if drinkitem in potionlist.potion and drinkitem in self.items:
-            prevhp = self.hp
-            drinkhp = (potionlist.potion[drinkitem])
-            self.hp = self.hp + drinkhp
-            self.items[drinkitem] = self.items[drinkitem] - 1
-            if self.hp > self.maxhp:
+            if self.items[drinkitem] == 0:
+                print "You don't have anymore " + str(drinkitem)
+            if self.hp >= self.maxhp:
+                print "You have max HP"
+                print "You can't drink anymore"
                 self.hp = self.maxhp
-                print 'You have max HP now'
-            else:
-                print 'You drank a ' + str(drinkitem) + ' and healed ' + str(drinkhp) + ' HP'
-            print 'Your health is now ' + str(self.hp)
+            if self.items[drinkitem] > 0:
+                prevhp = self.hp
+                self.hp = self.hp + drinkhp
+                self.items[drinkitem] = self.items[drinkitem] - 1
+                if self.hp > self.maxhp:
+                    self.hp = self.maxhp
+                    print 'You have max HP now'
+                else:
+                    print 'You drank a ' + str(drinkitem) + ' and healed ' + str(drinkhp) + ' HP'
+                    print 'Your health is now ' + str(self.hp)
         else:
-            print 'You can\'t drink that'
-        
-            
+            print 'You can\'t eat that'
+
 
 class Enemies():
 
     stats = {} # lvl A D HP
     stats['goblin'] = [1, 1, 1, 15]
     stats['hobgoblin'] = [2, 2, 2, 17]
-    stats['imp'] = [4,3,1,21]
+    stats['imp'] = [4,4,1,21]
     stats['lizardfolk'] = [5, 5, 3, 25]
-    stats['kobold'] = [6, 6, 7, 35]
-    stats['spider'] = [7, 5, 8, 40]
+    stats['kobold'] = [7, 6, 7, 35]
+    stats['spider'] = [9, 6, 9, 40]
     stats['gargoyle'] = [11, 16, 15, 51]
     stats['skeleton'] = [12, 9, 14, 67]
     stats['troll'] = [14, 14, 16, 70]
@@ -228,7 +240,17 @@ class Enemies():
         self.defense = defense
         self.hp = hp
         self.drops = drops
-        
+    
+  
+def LoadPlayer():
+    player = Player()
+    choice = raw_input('Enter \'new\' for a new player or press enter to load this player\n>> ')
+    if choice == 'new':
+        player.New()
+        player.stats = player.Load()
+    else:
+        player.stats = player.Load()
+    return player
         
 
 class Food():
@@ -244,18 +266,6 @@ class Potion():
     def __init__(self):
         self.potion = {}
         self.potion['healthpotion'] = 10
-    
-  
-def LoadPlayer():
-    player = Player()
-    choice = raw_input('Enter \'new\' for a new player or press enter to load this player\n>> ')
-    if choice == 'new':
-        player.New()
-        player.stats = player.Load()
-    else:
-        player.stats = player.Load()
-    return player
-    
 
         
 class Menu():
@@ -292,6 +302,8 @@ class Menu():
                 print ('Your defense is ' + str(player.defense))
             if choice == 'xp':
                 print ('You have ' + str(player.xp) + ' XP')
+            if choice == 'lvl':
+                print ('You are level ' + str(player.level))
             if choice in player.items:
                 print(choice + '(' + str(player.items[choice]) + ')')
                 
@@ -336,7 +348,7 @@ def ComplexHelp():
     choice = ''
     print choice
     while not choice == 'exit':
-        choice = raw_input('>>')
+        choice = raw_input('    >>')
         if choice == '1':
             print('When you start up the game, it will ask you for a file name')
             print('If you enter a new file name, then enter \'new\' at the propmt')
@@ -373,6 +385,8 @@ def ComplexHelp():
             print("'maxhp': displays your max HP")
             print("'xp': displays your max HP")
             print("'stats': displays all your stats")
+            print("'lvl': displays your current level")
+            # These commands make it easier to test individual functions of the game
             
         
 def Credits():
