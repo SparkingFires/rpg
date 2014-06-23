@@ -1,6 +1,5 @@
 # TO DO
 #
-# Eat Until Full
 # Make Tutorial
 # Add Shop
 # Create Campagin
@@ -8,6 +7,8 @@
 import random
 import time
 import string
+import math
+import pprint
 
 time.sleep(.3)
 print '____________ _____   '
@@ -23,7 +24,7 @@ time.sleep(.3)
 print '\_| \_\_|    \____/  '
 time.sleep(.3)
 
-version = '1.2.5'
+version = '1.2.6'
 print 'Version ' + str(version)
 print
 
@@ -72,7 +73,7 @@ class Player:
         print "Player saved!"
         
     def DisplayStats(self):
-        print('Level      : ' + str(self.level))
+        ('Level      : ' + str(self.level))
         print('XP         : ' + str(self.xp))
         print('Next Level : ' + str(100 * self.level * (self.level)))
         print
@@ -89,6 +90,7 @@ class Player:
         xpgain = 0
         if name in Enemies.stats:
             enemy = Enemies(name[0].upper() + name[1:], Enemies.stats[name][1], Enemies.stats[name][2], Enemies.stats[name][3], Enemies.drops[name])
+            print('Player:' + str(max(0,self.hp)))
             print (enemy.name) + ':' + str(enemy.hp) 
             print
             while enemy.hp>0 and self.hp>0:
@@ -132,15 +134,35 @@ class Player:
                 self.attack = self.attack + 1
                 self.defense = self.defense + 1
                 print ("You have leveled up!")
+                print ("Type 'stats' to view your new stats")
                 print ("You are now level {0}").format(self.level)
                 if self.hp >= self.maxhp:
                     print "You have max HP"
-                    print "You can't drink anymore"
                 
     def Eat(self):
         fooditem = raw_input('    >>')
         fooditem = fooditem.lower()
         foodlist = Food()
+        if fooditem == 'all':
+            print "Type the food to eat until you have max HP"
+            allfooditem = raw_input('    >>')
+            allfooditem = allfooditem.lower()
+            if allfooditem in foodlist.food and allfooditem in self.items:
+                prehp = self.hp
+                allfoodhp = (foodlist.food[allfooditem])
+                quantity = int(self.maxhp - self.hp) / (allfoodhp)
+                if quantity > (self.items[allfooditem]):
+                    quantity = (self.items[allfooditem])
+                self.hp = self.hp + (allfoodhp * quantity)
+                self.items[allfooditem] = self.items[allfooditem] - quantity
+                if self.hp >= self.maxhp:
+                    self.hp = self.maxhp
+                    print "You have max HP"
+                    print "You ate " + str(quantity) + " " + str(allfooditem) + " and gained " + str(self.hp - prehp) + " HP"
+                    print 'You now have ' + str(self.hp) + ' HP'
+                else:
+                    print "You ate " + str(quantity) + " " + str(allfooditem) + " and gained " + str(self.hp - prehp) + " HP"
+                    print 'You now have ' + str(self.hp) + ' HP'
         if fooditem in foodlist.food and fooditem in self.items:
             if self.items[fooditem] == 0:
                 print "You don't have anymore " + str(fooditem)
@@ -149,12 +171,12 @@ class Player:
                 foodhp = (foodlist.food[fooditem])
                 self.hp = self.hp + foodhp
                 self.items[fooditem] = self.items[fooditem] - 1
-                if self.hp > self.maxhp:
+                if self.hp >= self.maxhp:
                     self.hp = self.maxhp
-                    print 'You have max HP now'
+                    print 'You have max HP'
                 else:
-                    print 'You ate ' + str(fooditem) + ' and healed ' + str(foodhp) + ' HP'
-                    print 'Your health is now ' + str(self.hp)
+                    print 'You ate some ' + str(fooditem) + ' and healed ' + str(foodhp) + ' HP'
+                    print 'You now have ' + str(self.hp) + ' HP'
         if fooditem in self.items and fooditem not in foodlist.food:
             print "You can't eat that"
                     
@@ -164,26 +186,44 @@ class Player:
         drinkitem = drinkitem.lower()
         drinkitem = drinkitem.replace(" ", "")
         potionlist = Potion()
+        if drinkitem == 'all':
+            print "Type the potion to drink until you have max HP"
+            alldrinkitem = raw_input('    >>')
+            alldrinkitem = alldrinkitem.lower()
+            alldrinkitem = alldrinkitem.replace(" ", "")
+            alldrinkitem = alldrinkitem.replace("s", "")
+            if alldrinkitem in potionlist.potion and alldrinkitem in self.items:
+                prehp = self.hp
+                allfoodhp = (potionlist.potion[alldrinkitem])
+                quantity = int(self.maxhp - self.hp) / (allfoodhp)
+                if quantity > (self.items[alldrinkitem]):
+                    quantity = (self.items[alldrinkitem])
+                self.hp = self.hp + (allfoodhp * quantity)
+                self.items[alldrinkitem] = self.items[alldrinkitem] - quantity
+                if self.hp >= self.maxhp:
+                    self.hp = self.maxhp
+                    print "You have max HP"
+                    print "You ate " + str(quantity) + " " + str(alldrinkitem) + " and gained " + str(self.hp - prehp) + " HP"
+                    print 'You now have ' + str(self.hp) + ' HP'
+                else:
+                    print "You drank " + str(quantity) + " " + str(alldrinkitem) + "s and gained " + str(self.hp - prehp) + " HP"
+                    print 'You now have ' + str(self.hp) + ' HP'
         if drinkitem in potionlist.potion and drinkitem in self.items:
-            drinkhp = (potionlist.potion[drinkitem])
             if self.items[drinkitem] == 0:
                 print "You don't have anymore " + str(drinkitem)
-            if self.hp >= self.maxhp:
-                print "You have max HP"
-                print "You can't drink anymore"
-                self.hp = self.maxhp
             if self.items[drinkitem] > 0:
                 prevhp = self.hp
-                self.hp = self.hp + drinkhp
+                foodhp = (potionlist.potion[drinkitem])
+                self.hp = self.hp + foodhp
                 self.items[drinkitem] = self.items[drinkitem] - 1
-                if self.hp > self.maxhp:
+                if self.hp >= self.maxhp:
                     self.hp = self.maxhp
-                    print 'You have max HP now'
+                    print 'You have max HP'
                 else:
-                    print 'You drank a ' + str(drinkitem) + ' and healed ' + str(drinkhp) + ' HP'
-                    print 'Your health is now ' + str(self.hp)
+                    print 'You ate some ' + str(drinkitem) + ' and healed ' + str(foodhp) + ' HP'
+                    print 'You now have ' + str(self.hp) + ' HP'
         if drinkitem in self.items and drinkitem not in potionlist.potion:
-            print "You can't drink that"
+            print "You can't eat that"
 
 
 class Enemies():
@@ -191,12 +231,12 @@ class Enemies():
     stats = {} # lvl A D HP
     stats['goblin'] = [1, 1, 1, 15]
     stats['hobgoblin'] = [2, 2, 2, 17]
-    stats['imp'] = [4, 4, 1, 21]
-    stats['lizardfolk'] = [5, 5, 3, 25]
+    stats['imp'] = [4, 4, 2, 21]
+    stats['lizardfolk'] = [5, 5, 4, 25]
     stats['harpy'] = [7, 7, 6, 32]
-    stats['kobold'] = [8, 5, 7, 37]
-    stats['spider'] = [9, 6, 9, 42]
-    stats['troll'] = [11, 9, 12, 46]
+    stats['kobold'] = [8, 7, 8, 37]
+    stats['spider'] = [9, 7, 9, 42]
+    stats['troll'] = [11, 9, 11, 46]
     stats['skeleton'] = [14, 12, 14, 50]
     stats['orc'] = [16, 17, 15, 57]
     stats['giant'] = [19, 17, 20, 63]
@@ -218,7 +258,7 @@ class Enemies():
     drops['hobgoblin'] = [['gold', 100, 1, 12],['meat', 75, 1, 1]]
     drops['imp'] = [['gold', 100, 1, 14],['bread', 50, 1, 1],['healthpotion', 25, 1, 1]]
     drops['lizardfolk'] = [['gold', 100, 1, 15],['fish', 50, 1, 2],['bread', 50, 1, 2]]
-    drops['harpy'] = [['gold', 100, 1, 18],['bread', 75, 1, 2], ]
+    drops['harpy'] = [['gold', 100, 1, 18],['bread', 75, 1, 2],['healthpotion', 50, 1, 1]]
     drops['kobold'] = [['gold', 100, 1, 21],['meat', 50, 1, 2],['healthpotion', 25, 1, 1]]
     drops['spider'] = [['gold', 100, 1, 24],['healthpotion', 75, 1, 2]]
     drops['troll'] = [['gold', 100, 5, 26],['meat', 100, 1, 4]]
@@ -280,6 +320,7 @@ class Menu():
             levelup = str(100 * player.level * (player.level))
             choice = raw_input('>>')
             choice = choice.lower()
+            choice = choice.replace(" ", "")
             if choice == 'save':
                 player.Save()
             if choice == 'help':
@@ -293,26 +334,26 @@ class Menu():
                 player.Eat()
             if choice == 'drink':
                 player.Drink()
-            if choice == 'inv':
+            if choice == 'i' or choice == 'inv' or choice == 'inventory':
                 print str(player.items)
             if choice == 'enemies':
                 DisplayEnemies()
             if choice == 'hp':
                 print ('Your current HP is ' + str(player.hp))
+                time.sleep(.3)
                 print ('Your max HP is ' + str(player.maxhp))
-            if choice == 'att':
+            if choice == 'attack' or choice == 'att':
                 print ('Your attack is ' + str(player.attack))
-            if choice == 'def':
+            if choice == 'defense' or choice == 'def':
                 print ('Your defense is ' + str(player.defense))
             if choice == 'lvl' or choice == 'level':
                 print ('You are level ' + str(player.level))
-            if choice == 'xp' or choice == 'xp':
+            if choice == 'xp':
                 print 'You have ' + str(player.xp) + ' XP'
                 time.sleep(.3)
                 print 'You need ' + levelup + ' XP to level up'
                 time.sleep(.3)
-                print 'You need ' + str(int(levelup) - int(player.xp)) + ' more XP'
-                time.sleep(.3)
+                print 'You need ' + str(int(levelup) - int(player.xp)) + ' more XP to level up'
             if choice == 'version':
                 print 'This Game is Version ' + str(version)
             if choice in player.items:
@@ -392,11 +433,11 @@ def ComplexHelp():
             print("'inv': displays items in inventory")
             print("'def': displays your defense")
             print("'att': displays your attack")
-            print("'hp: displays your current HP")
-            print("'maxhp': displays your max HP")
-            print("'xp': displays your max HP")
-            print("'stats': displays all your stats")
+            print("'hp: displays your current HP and max HP")
+            print("'xp': displays your xp, next level xp, and xp need to reach the next level")
             print("'lvl': displays your current level")
+            print("'version': displays the current version of the game")
+            print("'stats': displays all your stats")
             # These commands make it easier to test individual functions of the game
             
         
