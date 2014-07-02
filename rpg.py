@@ -1,16 +1,13 @@
 # TO DO
 #
-# Make Tutorial
-# Add Shop
-# Create Campagin
+# Add Skill Training
+# Create Quests/Campagin
 
 import random
 import time
 import string
 import math
-import pprint
 
-time.sleep(.3)
 print '____________ _____   '
 time.sleep(.3)
 print '| ___ \ ___ \  __ \  '
@@ -24,7 +21,7 @@ time.sleep(.3)
 print '\_| \_\_|    \____/  '
 time.sleep(.3)
 
-version = '1.2.6'
+version = '1.2.7'
 print 'Version ' + str(version)
 print
 
@@ -56,7 +53,9 @@ class Player:
     def New(self):
         newline = 'created new player'
         stats = [1, 0, 1, 1, 100, 100]
-        line = ' '.join(str(i) for i in (stats))
+        weapon = None
+        armor = None
+        line = ' '.join(str(i) for i in (stats)) + '\n' + (str(weapon)) + '\n' + (str(armor))
         print newline
         with open(self.SaveFileName, 'w') as savefile:
             savefile.write(line)
@@ -70,7 +69,7 @@ class Player:
             for i in self.items:
                 lines.append(i + ' ' + str(self.items[i]) + '\n')
             savefile.writelines(lines)
-        print "Player saved!"
+        print "player saved!"
         
     def DisplayStats(self):
         ('Level      : ' + str(self.level))
@@ -83,6 +82,8 @@ class Player:
         print('Max HP     : ' + str(self.maxhp))
         print('Curent HP  : ' + str(self.hp))
         
+
+        
     
     def Battle(self):
         name = raw_input('    >>')
@@ -90,29 +91,31 @@ class Player:
         xpgain = 0
         if name in Enemies.stats:
             enemy = Enemies(name[0].upper() + name[1:], Enemies.stats[name][1], Enemies.stats[name][2], Enemies.stats[name][3], Enemies.drops[name])
-            print('Player:' + str(max(0,self.hp)))
+            print('Player:' + str(self.hp))
             print (enemy.name) + ':' + str(enemy.hp) 
             print
-            while enemy.hp>0 and self.hp>0:
+            while enemy.hp > 0 and self.hp > 0:
                 
-                randomatt = random.randint(1, 6) + (enemy.attack)
-                randomdef = random.randint(1, 6) + (self.defense)
-                if randomatt > randomdef:
-                    self.hp = self.hp - (randomatt - randomdef)
+                enemyattack = random.randint(1, 6) + (enemy.attack)
+                playerdefense = random.randint(1, 6) + (self.defense)
+                if enemyattack > playerdefense:
+                    self.hp = self.hp - (enemyattack - playerdefense)
                 else:
-                    xpgain = xpgain + random.randint(enemy.attack + randomdef - randomatt + 1, enemy.attack + randomdef - randomatt + 1) - self.defense
+                    xpgain = xpgain + random.randint(enemy.attack + playerdefense - enemyattack + 1, enemy.attack + playerdefense - enemyattack + 1) - self.defense
                 
-                randomatt = random.randint(1, 6) + (self.attack)
-                randomdef = random.randint(1, 6) + (enemy.defense)
-                if randomatt > randomdef:
-                    enemy.hp = enemy.hp - (randomatt - randomdef)
-                    xpgain = xpgain + random.randint(enemy.defense + randomatt - randomdef - 1, enemy.defense + randomatt - randomdef + 1) - self.attack
+                playerattack = random.randint(1, 6) + (self.attack)
+                enemydefense = random.randint(1, 6) + (enemy.defense)
+                if playerattack > enemydefense:
+                    enemy.hp = enemy.hp - (playerattack - enemydefense)
+                    xpgain = xpgain + random.randint(enemy.defense + playerattack - enemydefense - 1, enemy.defense + playerattack - enemydefense + 1) - self.attack
                     
+                if enemy.hp < 0:
+                    enemy.hp = 0
                 time.sleep(0.3)
-                print('Player:' + str(max(0,self.hp)))
-                print(enemy.name.title() + ':' + str(max(0,enemy.hp)))
+                print('Player:' + str(self.hp))
+                print(enemy.name.title() + ':' + str(enemy.hp))
                 print
-            if self.hp<=0:
+            if self.hp <= 0:
                 print 'You lost'
                 self.hp = self.maxhp
             else:
@@ -137,6 +140,7 @@ class Player:
                 print ("Type 'stats' to view your new stats")
                 print ("You are now level {0}").format(self.level)
                 if self.hp >= self.maxhp:
+                    self.hp = self.maxhp
                     print "You have max HP"
                 
     def Eat(self):
@@ -194,11 +198,11 @@ class Player:
             alldrinkitem = alldrinkitem.replace("s", "")
             if alldrinkitem in potionlist.potion and alldrinkitem in self.items:
                 prehp = self.hp
-                allfoodhp = (potionlist.potion[alldrinkitem])
+                alldrinkhp = (potionlist.potion[alldrinkitem])
                 quantity = int(self.maxhp - self.hp) / (allfoodhp)
                 if quantity > (self.items[alldrinkitem]):
                     quantity = (self.items[alldrinkitem])
-                self.hp = self.hp + (allfoodhp * quantity)
+                self.hp = self.hp + (alldrinkhp * quantity)
                 self.items[alldrinkitem] = self.items[alldrinkitem] - quantity
                 if self.hp >= self.maxhp:
                     self.hp = self.maxhp
@@ -224,6 +228,11 @@ class Player:
                     print 'You now have ' + str(self.hp) + ' HP'
         if drinkitem in self.items and drinkitem not in potionlist.potion:
             print "You can't eat that"
+    
+    
+    
+        
+
 
 
 class Enemies():
@@ -330,6 +339,8 @@ class Menu():
                 player.DisplayStats()
             if choice == 'battle':
                 player.Battle()
+            if choice == 'shop':
+                player.Shop()
             if choice == 'eat':
                 player.Eat()
             if choice == 'drink':
@@ -356,6 +367,10 @@ class Menu():
                 print 'You need ' + str(int(levelup) - int(player.xp)) + ' more XP to level up'
             if choice == 'version':
                 print 'This Game is Version ' + str(version)
+            if choice == 'credits':
+                Credits()
+            if choice == 'tutorial':
+                Tutorial()
             if choice in player.items:
                 print(choice + '(' + str(player.items[choice]) + ')')
                 
@@ -363,23 +378,23 @@ class Menu():
     class Help():
         
         def RunHelp(self):
-            print('To fight, enter \'battle\' followed by enemy name. For the list of enemies, enter \'enemies\'.')
+            print('Enter \'tutorial\' to see the tutorial')
             print('To quit the game, enter \'exit\', but remeber to save using \'save\' first!')
-            print('You may eat or drink an item by typing \'eat\' or \'drink\', then typing the item\'s name')
-            print('For a more complex explanation of the game, type \'help\' below.')
-            print('To view the credits, type \'credits\' below')
+            print('To fight, enter \'battle\' followed by enemy name. For the list of enemies, enter \'enemies\'.')
+            print('You may eat or drink an item by entering \'eat\' or \'drink\', then entering the item\'s name')
+            print('To view the credits, enter \'credits\' below')
             choice = raw_input('    >>')
             if choice == 'enemies':
                 DisplayEnemies()
-            if choice == 'help':
-                ComplexHelp()
             if choice == 'credits':
                 Credits()
+            if choice == 'tutorial':
+                Tutorial()
             
     
         
 def DisplayEnemies():
-    print('Level   Name')
+    print('Level     Name')
     print
     enemylist = []
     for i in Enemies.stats:
@@ -389,14 +404,14 @@ def DisplayEnemies():
     for i in enemylist:
         print(i[1])
                 
-def ComplexHelp():
+def Tutorial():
     print('This is a full explanation of all the game and its functions')
     print('Type a number to learn about that subject')
     print('1. Saving and Loading Player Files')
     print('2. Fighting')
     print('3. Food and Potions')
-    print('4. Commands')
-    print('Type \'exit\' to exit')
+    print('4. Commands List')
+    print('Type \'exit\' to exit the tutorial')
     choice = ''
     print choice
     while not choice == 'exit':
@@ -408,20 +423,30 @@ def ComplexHelp():
             print('To load a game, enter the file name of a game that has already been played and saved')
             print('Then, don\'t enter new, just press the enter key')
             print('This way, you may store several different players')
+            print('Type \'exit\' to exit the tutorial')
         if choice == '2':
-            print('To fight an enemy, type \'battle\'')
+            print('To fight an enemy, enter \'battle\'')
             print('You will see this:')
             print('    >>')
             print('Enter the name of the enemy you wish to fight')
             print('Then the battle will start and you will fight the enemy')
             print('If you lose, you will not gain XP or items')
             print('If you win, you will gain XP, along with items dropped by the enemy')
+            print('Type \'exit\' to exit the tutorial')
         if choice == '3':
             print('To eat or drink an item, enter \'eat\' or \'drink\'\n')
             print('You will see this:')
             print('    >>')
-            print('Enter the food item you wish to eat')
-            print('The item will disapear from your inventory, and you will gain health')
+            print('Enter the item you wish to consume')
+            print('Then the item will disapear from your inventory, and you will gain health')
+            print
+            print("You can also eat all of a certain item until you run out of that item, or you have max HP")
+            print("To do this, type \'eat\'")
+            print("Like before, you will see this:")
+            print('    >>')
+            print("Enter \'all\'")
+            print("Then you will eat that item until you have max HP")
+            print('Type \'exit\' to exit the tutorial')
         if choice == '4':
             print("'exit': exits the game")
             print("'save': saves the game")
@@ -438,13 +463,29 @@ def ComplexHelp():
             print("'lvl': displays your current level")
             print("'version': displays the current version of the game")
             print("'stats': displays all your stats")
+            print('Type \'exit\' to exit the tutorial')
             # These commands make it easier to test individual functions of the game
             
         
 def Credits():
-    print('Coded in Python 2.7.7 by Jayden Wilhelm')
+    print '____________ _____   '
+    time.sleep(.3)
+    print '| ___ \ ___ \  __ \  '
+    time.sleep(.3)
+    print '| |_/ / |_/ / |  \/  '
+    time.sleep(.3)
+    print '|    /|  __/| | __   '
+    time.sleep(.3)
+    print '| |\ \| |   | |_\ \  '
+    time.sleep(.3)
+    print '\_| \_\_|    \____/  '
+    time.sleep(.3)
     print('Based on an idea by Wigglesniff at\nhttp://www.dreamincode.net/forums/topic/243936-rpg-in-python/')
-    
+    time.sleep(1)
+    print('ASCII Art Font by http://patorjk.com/software/taag/#p=display&f=Doom&t=RPG')
+    time.sleep(1)
+    print('Coded in Python 2.7.7 by Jayden Wilhelm')
+
 
 def RunGame():
     player = LoadPlayer()
