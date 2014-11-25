@@ -8,6 +8,8 @@ import random
 import time
 import string
 import math
+from decimal import *
+
 
 print '____________ _____   '
 time.sleep(.3)
@@ -22,9 +24,10 @@ time.sleep(.3)
 print '\_| \_\_|    \____/  '
 time.sleep(.3)
 
-version = '1.2.9'
+version = '1.3'
 print 'Version ' + str(version)
 print
+
 
 class Player:
     def __init__(self):
@@ -238,41 +241,52 @@ class Player:
         if drinkitem in self.items and drinkitem not in potionlist.potion:
             print "You can't eat that"
     
-    
-    
-    def Quest(self):
-        choice = raw_input('What quest shall you embark on?')
-        print 'Clear the Mine'
-        choice = choice.lower()
-        choice = choice.replace(" ", "")
-        if choice == 'clear the mine':
-            print '='
-            
+
             
             
     def Train(self):
-        gold = ((self.level / self.attack) * 1000)
         golditem = 'gold'
         choice = raw_input("Do you want to train in attack, or defense?\n    >>")
         choice = choice.lower()
         choice = choice.replace(" ", "")
-        if choice == 'attack' or choice == 'att' or choice == 'a':
-            goldneeded = gold - self.items[golditem]
+        if choice == 'defense' or choice == 'def' or choice == 'd':
+            goldneeded = ((self.defense / self.level) * 100)
             if self.items[golditem] >= goldneeded:
                 print "You have " + str(self.items[golditem]) + " gold"
                 print "This will cost you " + str(goldneeded) + " gold"
+                print "After training, you will have " + str((int(self.items[golditem]) - (int(goldneeded)))) + ' gold'
+                train = raw_input("You have enough gold to train in defending, would you like to?\n    >>")
+                train = train.lower()
+                train = train.replace(" ","")
+                if train == 'yes' or train == 'y':
+                    self.items[golditem] = self.items[golditem] - int(goldneeded)
+                    self.defense = self.defense + 1
+            else:
+                print 'You don\'t have enough gold to train in defending'
+                print 'You have ' + str(self.items[golditem]) + ' gold'
+                print 'You need ' + str(goldneeded) + ' gold to train'
+                print 'You need ' + str(int(goldneeded) - (int(self.items[golditem]))) + ' more gold to train in defending'
+                    
+        elif choice == 'attack' or choice == 'att' or choice == 'a':
+            attack = int(self.attack)
+            level = int(self.level)
+            goldneeded = int(attack/level) * 100
+            if self.items[golditem] >= goldneeded:
+                print "You have " + str(self.items[golditem]) + " gold"
+                print "This will cost you " + str(goldneeded) + " gold"
+                print "After training, you will have " + str(int(self.items[golditem]) - int(goldneeded))
                 train = raw_input("You have enough gold to train in attacking, would you like to?\n    >>")
                 train = train.lower()
+                train = train.replace(" ","")
                 if train == 'yes' or train == 'y':
                     self.items[golditem] = self.items[golditem] - int(goldneeded)
                     self.attack = self.attack + 1
             else:
-                print "You don't have enough gold to train in attacking"
-                print "You need " + gold + " gold to train in attacking"
-                print "You have " + str(self.items[golditem]) + " gold"
-                print "You need " + str(int(self.items[golditem]) - int(goldneeded)) + " more gold"
-        #if choice == 'defense' or choice == 'def' or choice == 'd':
-            print "test the attack first"
+                print 'You don\'t have enough gold to train in attacking'
+                print 'You have ' + str(self.items[golditem]) + ' gold'
+                print 'You need ' + str(goldneeded) + ' gold to train'
+                print 'You need ' + str(int(goldneeded) - (int(self.items[golditem]))) + ' more gold to train in attacking'
+                
             
 
 
@@ -393,11 +407,11 @@ class Menu():
                 player.Eat()
             if choice == 'drink':
                 player.Drink()
+            if choice == 'train':
+                player.Train()
             if choice == 'i' or choice == 'inv' or choice == 'inventory':
                 print str(player.items)
-            if choice == 'enemies':
-                DisplayEnemies()
-            if choice == 'badguys':
+            if choice == 'enemies' or choice == 'badguys':
                 DisplayEnemies()
             if choice == 'hp':
                 print ('Your current HP is ' + str(player.hp))
