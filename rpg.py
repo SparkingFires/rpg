@@ -1,7 +1,8 @@
 # TO DO
 #
 # Add Skill Training
-# Create Quests/Campagin
+# Create Quests/Campagin/Story
+# Penalty for dying?
 
 import random
 import time
@@ -21,13 +22,13 @@ time.sleep(.3)
 print '\_| \_\_|    \____/  '
 time.sleep(.3)
 
-version = '1.2.7'
+version = '1.2.9'
 print 'Version ' + str(version)
 print
 
 class Player:
     def __init__(self):
-        self.SaveFileName = raw_input("Enter User Name\n>> ")
+        self.SaveFileName = raw_input("Enter User Name\n>>")
         items = {}
         
     def Load(self):
@@ -72,37 +73,38 @@ class Player:
         print "player saved!"
         
     def DisplayStats(self):
-        ('Level      : ' + str(self.level))
-        print('XP         : ' + str(self.xp))
-        print('Next Level : ' + str(100 * self.level * (self.level)))
+        print 'Level      : ' + str(self.level)
+        print 'XP         : ' + str(self.xp)
+        print 'Next Level : ' + str(100 * self.level * (self.level))
         print
-        print('Attack     : ' + str(self.attack))
-        print('Defense    : ' + str(self.defense))
+        print 'Attack     : ' + str(self.attack)
+        print 'Defense    : ' + str(self.defense)
         print
-        print('Max HP     : ' + str(self.maxhp))
-        print('Curent HP  : ' + str(self.hp))
+        print 'Max HP     : ' + str(self.maxhp)
+        print 'Curent HP  : ' + str(self.hp)
         
 
         
     
     def Battle(self):
         name = raw_input('    >>')
+        name = name.lower()
         name = name.replace(" ", "")
         xpgain = 0
         if name in Enemies.stats:
             enemy = Enemies(name[0].upper() + name[1:], Enemies.stats[name][1], Enemies.stats[name][2], Enemies.stats[name][3], Enemies.drops[name])
             print('Player:' + str(self.hp))
-            print (enemy.name) + ':' + str(enemy.hp) 
+            print (enemy.name) + ':' + str(enemy.hp)
             print
             while enemy.hp > 0 and self.hp > 0:
-                
+                # enemy's attack
                 enemyattack = random.randint(1, 6) + (enemy.attack)
                 playerdefense = random.randint(1, 6) + (self.defense)
                 if enemyattack > playerdefense:
                     self.hp = self.hp - (enemyattack - playerdefense)
                 else:
-                    xpgain = xpgain + random.randint(enemy.attack + playerdefense - enemyattack + 1, enemy.attack + playerdefense - enemyattack + 1) - self.defense
-                
+                    xpgain = xpgain + (enemy.attack + playerdefense - enemyattack + 1) - self.defense
+                # player's attack
                 playerattack = random.randint(1, 6) + (self.attack)
                 enemydefense = random.randint(1, 6) + (enemy.defense)
                 if playerattack > enemydefense:
@@ -116,11 +118,15 @@ class Player:
                 print(enemy.name.title() + ':' + str(enemy.hp))
                 print
             if self.hp <= 0:
+                self.xp = self.xp + int(xpgain/3)
                 print 'You lost'
                 self.hp = self.maxhp
             else:
+                if xpgain < 0:
+                    xpgain = 0
                 self.xp = self.xp + xpgain
                 print 'You win'
+                print 'You gained ' + str(xpgain) + ' XP'
                 print 'Enemy drops:'
                 for i in range(len(enemy.drops)):
                     itemprob = random.randint(1,100)
@@ -137,8 +143,8 @@ class Player:
                 self.attack = self.attack + 1
                 self.defense = self.defense + 1
                 print ("You have leveled up!")
-                print ("Type 'stats' to view your new stats")
                 print ("You are now level {0}").format(self.level)
+                print ("Type 'stats' to view your new stats")
                 if self.hp >= self.maxhp:
                     self.hp = self.maxhp
                     print "You have max HP"
@@ -173,8 +179,11 @@ class Player:
             if self.items[fooditem] > 0:
                 prevhp = self.hp
                 foodhp = (foodlist.food[fooditem])
-                self.hp = self.hp + foodhp
-                self.items[fooditem] = self.items[fooditem] - 1
+                if foodhp + prevhp > self.maxhp:
+                    print "You are full"
+                elif foodhp + prevhp <= self.maxhp:
+                    self.hp = self.hp + foodhp
+                    self.items[fooditem] = self.items[fooditem] - 1
                 if self.hp >= self.maxhp:
                     self.hp = self.maxhp
                     print 'You have max HP'
@@ -231,31 +240,66 @@ class Player:
     
     
     
-        
+    def Quest(self):
+        choice = raw_input('What quest shall you embark on?')
+        print 'Clear the Mine'
+        choice = choice.lower()
+        choice = choice.replace(" ", "")
+        if choice == 'clear the mine':
+            print '='
+            
+            
+            
+    def Train(self):
+        gold = ((self.level / self.attack) * 1000)
+        golditem = 'gold'
+        choice = raw_input("Do you want to train in attack, or defense?\n    >>")
+        choice = choice.lower()
+        choice = choice.replace(" ", "")
+        if choice == 'attack' or choice == 'att' or choice == 'a':
+            goldneeded = gold - self.items[golditem]
+            if self.items[golditem] >= goldneeded:
+                print "You have " + str(self.items[golditem]) + " gold"
+                print "This will cost you " + str(goldneeded) + " gold"
+                train = raw_input("You have enough gold to train in attacking, would you like to?\n    >>")
+                train = train.lower()
+                if train == 'yes' or train == 'y':
+                    self.items[golditem] = self.items[golditem] - int(goldneeded)
+                    self.attack = self.attack + 1
+            else:
+                print "You don't have enough gold to train in attacking"
+                print "You need " + gold + " gold to train in attacking"
+                print "You have " + str(self.items[golditem]) + " gold"
+                print "You need " + str(int(self.items[golditem]) - int(goldneeded)) + " more gold"
+        #if choice == 'defense' or choice == 'def' or choice == 'd':
+            print "test the attack first"
+            
 
 
 
 class Enemies():
 
-    stats = {} # lvl A D HP
+    stats = {} # lvl Att Def HP
     stats['goblin'] = [1, 1, 1, 15]
     stats['hobgoblin'] = [2, 2, 2, 17]
     stats['imp'] = [4, 4, 2, 21]
     stats['lizardfolk'] = [5, 5, 4, 25]
     stats['harpy'] = [7, 7, 6, 32]
     stats['kobold'] = [8, 7, 8, 37]
-    stats['spider'] = [9, 7, 9, 42]
+    stats['spider'] = [9, 9, 8, 42]
     stats['troll'] = [11, 9, 11, 46]
-    stats['skeleton'] = [14, 12, 14, 50]
-    stats['orc'] = [16, 17, 15, 57]
-    stats['giant'] = [19, 17, 20, 63]
-    stats['gargoyle'] = [22, 22, 22, 75]
+    stats['skeleton'] = [14, 14, 14, 50]
+    stats['orc'] = [16, 16, 15, 57] # game starts getting a little slow
+    stats['gargoyle'] = [19, 17, 20, 63]
+    stats['giant'] = [22, 24, 22, 75]
     stats['orge'] = [25, 25, 27, 84]
     stats['golem'] = [30, 23, 38, 90]
+    stats['centaur'] = [35, 33, 31, 95]
     stats['basilisk'] = [36, 35, 37, 97]
     stats['manticore'] = [48, 50, 45, 110]
     stats['minotaur'] = [56, 56, 55, 130]
     stats['wizard'] = [62, 65, 68, 150]
+    stats['hellhound'] = [64, 79, 59, 175]
     stats['elemental'] = [67, 70, 75, 200]
     stats['dragon'] = [72, 77, 77, 400]
     stats['serpent'] = [84, 88, 85, 550]
@@ -266,24 +310,26 @@ class Enemies():
     drops['goblin'] = [['gold', 100, 1, 10],['fish', 40, 1, 1]]
     drops['hobgoblin'] = [['gold', 100, 1, 12],['meat', 75, 1, 1]]
     drops['imp'] = [['gold', 100, 1, 14],['bread', 50, 1, 1],['healthpotion', 25, 1, 1]]
-    drops['lizardfolk'] = [['gold', 100, 1, 15],['fish', 50, 1, 2],['bread', 50, 1, 2]]
+    drops['lizardfolk'] = [['gold', 100, 1, 15],['fish', 50, 2, 4],['bread', 50, 1, 2]]
     drops['harpy'] = [['gold', 100, 1, 18],['bread', 75, 1, 2],['healthpotion', 50, 1, 1]]
-    drops['kobold'] = [['gold', 100, 1, 21],['meat', 50, 1, 2],['healthpotion', 25, 1, 1]]
-    drops['spider'] = [['gold', 100, 1, 24],['healthpotion', 75, 1, 2]]
-    drops['troll'] = [['gold', 100, 5, 26],['meat', 100, 1, 4]]
+    drops['kobold'] = [['gold', 100, 1, 21],['meat', 50, 1, 2]]
+    drops['spider'] = [['gold', 100, 1, 24],['healthpotion', 75, 1, 1]]
+    drops['troll'] = [['gold', 100, 5, 26],['meat', 100, 1, 4],['fish', 75, 5, 10]]
     drops['skeleton'] = [['gold', 100, 7, 28],['healthpotion', 50, 1, 2]]
-    drops['orc'] = [['gold', 100, 9, 31], ['meat', 100, 1, 3]]
-    drops['giant'] = [['gold', 100, 12, 34], ['meat', 100, 1, 4]]
-    drops['gargoyle'] = [['gold', 100, 10, 26],['healthpotion', 25, 1, 2]]
-    drops['orge'] = [['gold', 100, 15, 35], ['meat', 100, 1, 4]]
-    drops['golem'] = [['gold', 100, 18, 37],['healthpotion', 50, 1, 3]]
+    drops['orc'] = [['gold', 100, 9, 31],['meat', 100, 1, 3],['fish', 40, 7, 15]]
+    drops['giant'] = [['gold', 100, 12, 34],['meat', 100, 1, 4],['fish', 60, 6, 17]]
+    drops['gargoyle'] = [['gold', 100, 10, 26],['healthpotion', 50, 1, 2]]
+    drops['orge'] = [['gold', 100, 15, 35],['meat', 100, 1, 4],['fish', 75, 9, 20]]
+    drops['golem'] = [['gold', 100, 18, 37],['healthpotion', 75, 1, 3]]
+    drops['centaur'] = [['gold', 100, 10, 50],['apple', 60, 1, 3]]
     drops['basilisk'] = [['gold', 100, 20, 40], ['meat', 100, 2, 6]]
     drops['manticore'] = [['gold', 100, 25, 44], ['meat', 100, 3, 8]]
-    drops['minotaur'] = [['gold', 100, 30, 50], ['meat', 100, 4, 11]]
+    drops['minotaur'] = [['gold', 100, 30, 50], ['meat', 100, 4, 11],['fish', 90, 15, 25]]
     drops['wizard'] = [['gold', 100, 40, 60], ['bread', 100, 5, 11]]
-    drops['elemental'] = [['gold', 100, 50, 80],['healthpotion', 75, 3, 7]]
+    drops['hellhound'] = [['gold', 100, 40, 75], ['meat', 100, 7, 10]]
+    drops['elemental'] = [['gold', 100, 50, 80],['healthpotion', 100, 3, 7]]
     drops['dragon'] = [['gold', 100, 60, 90], ['meat', 100, 7, 17]]
-    drops['serpent'] = [['gold', 100, 70, 100], ['meat', 100, 10, 20]]
+    drops['serpent'] = [['gold', 100, 70, 100], ['meat', 100, 10, 20],['fish', 100, 30, 50]]
     drops['wyvern'] = [['gold', 100, 80, 120], ['meat', 100, 14, 20]]
     drops['hydra'] = [['gold', 100, 90, 150], ['meat', 100, 20, 32]]
     drops['phoenix'] = [['gold', 100, 200, 300],['healthpotion', 100, 3, 10]]
@@ -298,7 +344,7 @@ class Enemies():
   
 def LoadPlayer():
     player = Player()
-    choice = raw_input('Enter \'new\' for a new player or press enter to load this player\n>> ')
+    choice = raw_input('Enter \'new\' for a new player or press enter to load this player\n>>')
     if choice == 'new':
         player.New()
         player.stats = player.Load()
@@ -313,7 +359,9 @@ class Food():
         self.food = {}
         self.food['bread'] = 2
         self.food['fish'] = 3
+        self.food['apple'] = 3
         self.food['meat'] = 5
+        
         
 class Potion():
     
@@ -337,7 +385,7 @@ class Menu():
                 newHelp.RunHelp()
             if choice == 'stats':
                 player.DisplayStats()
-            if choice == 'battle':
+            if choice == 'battle' or choice == 'fight':
                 player.Battle()
             if choice == 'shop':
                 player.Shop()
@@ -348,6 +396,8 @@ class Menu():
             if choice == 'i' or choice == 'inv' or choice == 'inventory':
                 print str(player.items)
             if choice == 'enemies':
+                DisplayEnemies()
+            if choice == 'badguys':
                 DisplayEnemies()
             if choice == 'hp':
                 print ('Your current HP is ' + str(player.hp))
@@ -373,6 +423,10 @@ class Menu():
                 Tutorial()
             if choice in player.items:
                 print(choice + '(' + str(player.items[choice]) + ')')
+            if choice == 'quit':
+                player.Save()
+                time.wait(3)
+                sys.exit
                 
 
     class Help():
@@ -380,7 +434,7 @@ class Menu():
         def RunHelp(self):
             print('Enter \'tutorial\' to see the tutorial')
             print('To quit the game, enter \'exit\', but remeber to save using \'save\' first!')
-            print('To fight, enter \'battle\' followed by enemy name. For the list of enemies, enter \'enemies\'.')
+            print('To fight, enter \'battle\' then hit enter, and type the enemy name. For the list of enemies, enter \'enemies\'.')
             print('You may eat or drink an item by entering \'eat\' or \'drink\', then entering the item\'s name')
             print('To view the credits, enter \'credits\' below')
             choice = raw_input('    >>')
@@ -407,6 +461,7 @@ def DisplayEnemies():
 def Tutorial():
     print('This is a full explanation of all the game and its functions')
     print('Type a number to learn about that subject')
+    print("--Note that while you are in tutorial mode, you need to type 'exit' to leave tutorial mode--")
     print('1. Saving and Loading Player Files')
     print('2. Fighting')
     print('3. Food and Potions')
@@ -421,11 +476,11 @@ def Tutorial():
             print('If you enter a new file name, then enter \'new\' at the propmt')
             print('This will create a new text file in the folder with this game')
             print('To load a game, enter the file name of a game that has already been played and saved')
-            print('Then, don\'t enter new, just press the enter key')
+            print('Then, don\'t enter \'new\', just press the enter key')
             print('This way, you may store several different players')
             print('Type \'exit\' to exit the tutorial')
         if choice == '2':
-            print('To fight an enemy, enter \'battle\'')
+            print('To fight an enemy, type \'battle\' and hit enter')
             print('You will see this:')
             print('    >>')
             print('Enter the name of the enemy you wish to fight')
@@ -444,7 +499,8 @@ def Tutorial():
             print("To do this, type \'eat\'")
             print("Like before, you will see this:")
             print('    >>')
-            print("Enter \'all\'")
+            print("Type \'all\' and hit enter")
+            print('Then type the food you wish to consume until you have full health')
             print("Then you will eat that item until you have max HP")
             print('Type \'exit\' to exit the tutorial')
         if choice == '4':
@@ -489,7 +545,8 @@ def Credits():
 
 def RunGame():
     player = LoadPlayer()
-    print('If you need help at any time, type \'help\'.')
+    print 'If you need help at any time, type \'help\'.'
+    print 'Making this screen larger may be better for playing the game'
     menu = Menu()
     menu.RunMenu(player)
     
