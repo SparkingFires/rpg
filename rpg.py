@@ -4,6 +4,8 @@
 # Create Quests/Campagin/Story
 # Penalty for dying?
 # Posioned Food
+# No negative health values
+# Award gold when leveling up
 
 import random
 import time
@@ -25,7 +27,7 @@ time.sleep(.3)
 print '\_| \_\_|    \____/  '
 time.sleep(.3)
 
-version = '1.3.1'
+version = '1.3.2'
 print 'Version ' + str(version)
 print
 
@@ -251,7 +253,7 @@ class Player:
         choice = choice.lower()
         choice = choice.replace(" ", "")
         if choice == 'defense' or choice == 'def' or choice == 'd':
-            goldneeded = ((self.defense / self.level) * 100)
+            goldneeded = ((self.defense) * 100 / self.level)
             if self.items[golditem] >= goldneeded:
                 print "You have " + str(self.items[golditem]) + " gold"
                 print "This will cost you " + str(goldneeded) + " gold"
@@ -271,17 +273,18 @@ class Player:
         elif choice == 'attack' or choice == 'att' or choice == 'a':
             attack = int(self.attack)
             level = int(self.level)
-            goldneeded = int(attack/level) * 100
+            goldneeded = ((self.attack) * 100 / self.level)
             if self.items[golditem] >= goldneeded:
                 print "You have " + str(self.items[golditem]) + " gold"
                 print "This will cost you " + str(goldneeded) + " gold"
-                print "After training, you will have " + str(int(self.items[golditem]) - int(goldneeded))
+                print "After training, you will have " + str(int(self.items[golditem]) - int(goldneeded)) + ' gold'
                 train = raw_input("You have enough gold to train in attacking, would you like to?\n    >>")
                 train = train.lower()
                 train = train.replace(" ","")
                 if train == 'yes' or train == 'y':
                     self.items[golditem] = self.items[golditem] - int(goldneeded)
                     self.attack = self.attack + 1
+                    print 'You trained in attacking and increased you attack skill to ' + self.attack
             else:
                 print 'You don\'t have enough gold to train in attacking'
                 print 'You have ' + str(self.items[golditem]) + ' gold'
@@ -389,6 +392,7 @@ class Weapon():
         self.weapon = {}
         self.weapon['rustydagger'] = 1
         self.weapon['spear'] = 3
+        self.weapon['greatsword'] = 4
 
         
 class Menu():
@@ -572,4 +576,5 @@ def RunGame():
     menu.RunMenu(player)
     
 RunGame()
+
 
