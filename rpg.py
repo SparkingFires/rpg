@@ -209,7 +209,7 @@ class Player:
             alldrinkitem = alldrinkitem.replace(" ", "")
             alldrinkitem = alldrinkitem.replace("s", "")
             if alldrinkitem in potionlist.potion and alldrinkitem in self.items:
-                prehp = self.hp
+                prehp = self.hp 
                 alldrinkhp = (potionlist.potion[alldrinkitem])
                 quantity = int(self.maxhp - self.hp) / (allfoodhp)
                 if quantity > (self.items[alldrinkitem]):
