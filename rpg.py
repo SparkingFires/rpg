@@ -3,6 +3,7 @@
 # Add Skill Training
 # Create Quests/Campagin/Story
 # Penalty for dying?
+# Posioned Food
 
 import random
 import time
@@ -24,7 +25,7 @@ time.sleep(.3)
 print '\_| \_\_|    \____/  '
 time.sleep(.3)
 
-version = '1.3'
+version = '1.3.1'
 print 'Version ' + str(version)
 print
 
@@ -209,7 +210,7 @@ class Player:
             alldrinkitem = alldrinkitem.replace(" ", "")
             alldrinkitem = alldrinkitem.replace("s", "")
             if alldrinkitem in potionlist.potion and alldrinkitem in self.items:
-                prehp = self.hp 
+                prehp = self.hp
                 alldrinkhp = (potionlist.potion[alldrinkitem])
                 quantity = int(self.maxhp - self.hp) / (allfoodhp)
                 if quantity > (self.items[alldrinkitem]):
@@ -321,16 +322,16 @@ class Enemies():
     stats['hydra'] = [93, 94, 93, 750]
     stats['phoenix'] = [100, 100, 100, 1000]
     drops = {} # % chance, how many, out of how many
-    drops['goblin'] = [['gold', 100, 1, 10],['fish', 40, 1, 1]]
+    drops['goblin'] = [['gold', 100, 1, 10],['fish', 40, 1, 1],['rustydagger', 20, 1, 2]]
     drops['hobgoblin'] = [['gold', 100, 1, 12],['meat', 75, 1, 1]]
     drops['imp'] = [['gold', 100, 1, 14],['bread', 50, 1, 1],['healthpotion', 25, 1, 1]]
-    drops['lizardfolk'] = [['gold', 100, 1, 15],['fish', 50, 2, 4],['bread', 50, 1, 2]]
+    drops['lizardfolk'] = [['gold', 100, 1, 15],['fish', 50, 2, 4],['bread', 50, 1, 2],['spear', 30, 1, 1]]
     drops['harpy'] = [['gold', 100, 1, 18],['bread', 75, 1, 2],['healthpotion', 50, 1, 1]]
     drops['kobold'] = [['gold', 100, 1, 21],['meat', 50, 1, 2]]
     drops['spider'] = [['gold', 100, 1, 24],['healthpotion', 75, 1, 1]]
     drops['troll'] = [['gold', 100, 5, 26],['meat', 100, 1, 4],['fish', 75, 5, 10]]
     drops['skeleton'] = [['gold', 100, 7, 28],['healthpotion', 50, 1, 2]]
-    drops['orc'] = [['gold', 100, 9, 31],['meat', 100, 1, 3],['fish', 40, 7, 15]]
+    drops['orc'] = [['gold', 100, 9, 31],['meat', 100, 1, 3],['fish', 40, 7, 15],['greatsword', 30, 1, 1]]
     drops['giant'] = [['gold', 100, 12, 34],['meat', 100, 1, 4],['fish', 60, 6, 17]]
     drops['gargoyle'] = [['gold', 100, 10, 26],['healthpotion', 50, 1, 2]]
     drops['orge'] = [['gold', 100, 15, 35],['meat', 100, 1, 4],['fish', 75, 9, 20]]
@@ -382,6 +383,12 @@ class Potion():
     def __init__(self):
         self.potion = {}
         self.potion['healthpotion'] = 10
+        
+class Weapon():
+    def __init__(self):
+        self.weapon = {}
+        self.weapon['rustydagger'] = 1
+        self.weapon['spear'] = 3
 
         
 class Menu():
@@ -565,5 +572,4 @@ def RunGame():
     menu.RunMenu(player)
     
 RunGame()
-
 
