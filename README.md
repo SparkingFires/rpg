@@ -10,7 +10,6 @@ You must do
     (hit enter)
         >>goblin
     (hit enter)
-    
 (fight happens)
 
 Same goes for eating and drinking
