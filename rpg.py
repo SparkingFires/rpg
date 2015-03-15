@@ -63,7 +63,7 @@ class Player:
     def New(self):
         newline = 'Created New Player!'
         stats = [1, 0, 1, 1, 100, 100]
-        line = ' '.join(str(i) for i in (stats)) + '\n' + (str(weapon)) + '\n' + (str(armor))            
+        line = ' '.join(str(i) for i in (stats))      
         print newline
         with open(self.SaveFileName, 'w') as savefile:
             savefile.write(line)
@@ -153,11 +153,12 @@ class Player:
                 self.attack = self.attack + 1
                 self.defense = self.defense + 1
                 golditem = 'gold'
+                pregold = self.items[golditem]
                 self.items[golditem] = self.items[golditem] + (self.level * 10)
                 print ("You have leveled up!")
-                print ("You are now level {0}").format(self.level)
-                print ('You got ' + str((self.items[golditem] + (self.level * 10))) + ' gold')
-                print ('You now have ' + str(self.items[golditem]) + ' gold')
+                print ("You are now level {0}!").format(self.level)
+                print ('You earned ' + str(pregold) + ' gold for leveling up!')
+                print ('You now have ' + str(self.items[golditem]) + ' gold!')
                 print ("Type 'stats' to view your new stats")
                 if self.hp >= self.maxhp:
                     self.hp = self.maxhp
@@ -391,22 +392,20 @@ def LoadPlayer():
 
 
 class Food():
-    
-    def __init__(self):
-        self.food = {}
-        self.food['bread'] = [2, 5]
-        self.food['posionedbread'] = [2, 100]
-        self.food['fish'] = [3, 7]
-        self.food['mushrooms'] = [3, 9]
-        self.food['apple'] = [3, 6]
-        self.food['meat'] = [5, 8]
+
+    food = {} #hp regen, posion chance
+    food['bread'] = [2, 5]
+    food['posionedbread'] = [2, 100]
+    food['fish'] = [3, 7]
+    food['mushrooms'] = [3, 9]
+    food['apple'] = [3, 6]
+    food['meat'] = [5, 8]
                 
         
 class Potion():
     
-    def __init__(self):
-        self.potion = {}
-        self.potion['healthpotion'] = 10
+    potion = {}
+    potion['healthpotion'] = 10
         
         
 class Weapon():
@@ -420,9 +419,8 @@ class Weapon():
 
 class Menu():
     def RunMenu(self, player):
-        menuLoop = ''
         command = ''
-        while not menuLoop == 'exit':
+        while 1:
             levelup = str(100 * player.level * (player.level))
             global command
             command = raw_input('>>')
@@ -446,9 +444,15 @@ class Menu():
             #if command[0] == 'shop':
                 #player.Shop()
             if command[0] == 'eat' or command[0] == 'consume':
-                player.Eat()
+                if command == ['eat'] or command == ['consume']:
+                    print "What do you want to eat?"
+                else:
+                    player.Eat()
             if command[0] == 'drink':
-                player.Drink()
+                if command == ['drink']:
+                    print "What do you want to drink?"
+                else:
+                    player.Drink()
             if command[0] == 'train' or command[0] == 'learn':
                 player.Train()
             if command[0] == 'i' or command[0] == 'inv' or command[0] == 'inventory':
@@ -479,10 +483,14 @@ class Menu():
                 Tutorial()
             if command[0] in player.items:
                 print(command[0] + '(' + str(player.items[command[0]]) + ')')
+            if command[0] in Enemies.stats:
+                print "Type 'battle", command[0] + "' to fight a", command[0]
+            if command[0] in Food.food:
+                print "Type 'eat", command[0] + "' to eat a", command[0]
+            if command[0] in Potion.potion:
+                print "Type 'drink", command[0] + "' to drink a", command[0]
             if command[0] == 'exit':
                 print "Type 'quit' to save and exit the game"
-            if command[0] in Enemies.stats:
-                print "type 'battle", command[0] + "' to fight a", command[0]
             if command[0] == 'quit':
                 player.Save()
                 exit()
